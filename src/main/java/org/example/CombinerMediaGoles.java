@@ -1,13 +1,9 @@
 package org.example;
-
-import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
-
-public class ReducerMediaGoles extends Reducer<Text, Text, Text, DoubleWritable> {
-
+public class CombinerMediaGoles extends Reducer<Text, Text, Text, Text>{
     @Override
     protected void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
@@ -21,9 +17,6 @@ public class ReducerMediaGoles extends Reducer<Text, Text, Text, DoubleWritable>
             totalPartidos += Integer.parseInt(parts[1]);
         }
 
-        if (totalPartidos > 0) {
-            double media = (double) totalGoles / totalPartidos;
-            context.write(key, new DoubleWritable(media));
-        }
+        context.write(key, new Text(totalGoles + ";" + totalPartidos));
     }
 }
